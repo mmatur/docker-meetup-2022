@@ -1,0 +1,13 @@
+apiVersion: hub.traefik.io/v1alpha1
+kind: AccessControlPolicy
+metadata:
+  name: acp
+spec:
+  oidcGoogle:
+    clientId: 339977118040-c28srp7mqtrvhlei8ne6ldlg8bc72ai0.apps.googleusercontent.com
+    emails:
+    - michael.matur@traefik.io
+    redirectUrl: /callback
+    secret:
+      name: oidc
+      namespace: hub-agent

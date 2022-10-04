@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  # Start the agent with the latest version
+  hub-agent:
+    image: ghcr.io/traefik/hub-agent-traefik:experimental
+    container_name: hub-agent
+    restart: "on-failure"
+    command:
+      - run
+      - --hub.token=XXXX
+      - --auth-server.advertise-url=http://hub-agent
+      - --traefik.host=traefik
+      - --traefik.tls.insecure=true
+      - --hub.url=https://platform-preview.hub.traefik.io/agent
+      - --hub.ui.url=http://localhost:3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - traefik
+
+  # Start Traefik with the latest version
+  traefik:
+    image: traefik:v2.8
+    container_name: traefik
+    command:
+      # Enable Hub communication (open the port 9900 and 9901 by default)
+      - --experimental.hub=true
+      - --hub.tls.insecure=true
+      - --metrics.prometheus.addrouterslabels=true
+
+  whoami:
+    image: traefik/traefikee-webapp-demo:hub
